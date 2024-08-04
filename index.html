@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>せん妄自動提案表</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+    <style>
+        .drug-card {
+            transition: all 0.3s ease;
+        }
+        .drug-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        body {
+        display: none;
+    }
+    </style>
+    <script>
+    function checkPassword() {
+        var password = prompt("Enter the password:");
+        if (password === "sfc2024") {
+            document.body.style.display = "block";
+        } else {
+            alert("Incorrect password!");
+            document.body.innerHTML = "<h1>Access Denied</h1>";
+            document.body.style.display = "block";
+        }
+    }
+        document.addEventListener("DOMContentLoaded", calculateCurrentTreatment);
+
+function calculateCurrentTreatment() {
+    const childPugh = document.getElementById("ChildPugh").value;
+    const kidneyFunction = document.getElementById("クレアチニン").value;
+    const diabetes = document.getElementById("糖尿病既往").value;
+    const hba1c = document.getElementById("HbA1c").value;
+    const qtProlongation = document.getElementById("QT延長").value;
+    const heartFailure = document.getElementById("心不全").value;
+    const pdDlb = document.getElementById("PD_Lb").value;
+    const myastheniaGravis = document.getElementById("重症筋無力症").value;
+    const glaucoma = document.getElementById("急性閉塞隅角緑内障").value;
+    const age = document.getElementById("年齢").value;
+    const psStatus = document.getElementById("PS全身状態").value;
+    const deliriumType = document.getElementById("せん妄タイプ").value;
+
+    let result = `
+    <table class="w-full table-auto">
+        <thead>
+            <tr class="bg-gray-300">
+                <th class="px-4 py-2">カテゴリ</th>
+                <th class="px-4 py-2">項目</th>
+                <th class="px-4 py-2">結果</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="bg-gray-100">
+                <td class="border px-4 py-2">肝機能</td>
+                <td class="border px-4 py-2">Child-Pugh分類</td>
+                <td class="border px-4 py-2">${childPugh}</td>
+            </tr>
+            <tr class="bg-white">
+                <td class="border px-4 py-2">腎機能</td>
+                <td class="border px-4 py-2">腎機能</td>
+                <td class="border px-4 py-2">${(kidneyFunction > 1.0) ? "<span class='text-red-500 font-bold'>腎障害あり</span>" : "腎障害なし"}</td>
+            </tr>
+            <tr class="bg-gray-100">
+                <td class="border px-4 py-2">糖尿病</td>
+                <td class="border px-4 py-2">糖尿病・既往</td>
+                <td class="border px-4 py-2">${(diabetes === "あり") ? "<span class='text-red-500 font-bold'>糖尿病あり</span>" : "糖尿病なし"}</td>
+            </tr>
+            <tr class="bg-white">
+                <td class="border px-4 py-2"></td>
+                <td class="border px-4 py-2">HbA1c</td>
+                <td class="border px-4 py-2">${(hba1c > 6.5) ? "<span class='text-red-500 font-bold'>HbA1c≧6.5</span>" : "HbA1c≦6.5"}</td>
+            </tr>
+            <tr class="bg-gray-100">
+                <td class="border px-4 py-2">心機能</td>
+                <td class="border px-4 py-2">QT延長</td>
+                <td class="border px-4 py-2">${(qtProlongation === "あり") ? "<span class='text-red-500 font-bold'>QT延長あり</span>" : "QT延長なし"}</td>
+            </tr>
+            <tr class="bg-white">
+                <td class="border px-4 py-2"></td>
+                <td class="border px-4 py-2">心不全</td>
+                <td class="border px-4 py-2">${(heartFailure === "あり") ? "<span class='text-red-500 font-bold'>重症心不全あり</span>" : "重症心不全なし"}</td>
+            </tr>
+            <tr class="bg-gray-100">
+                <td class="border px-4 py-2"></td>
+                <td class="border px-4 py-2">PD/DLB</td>
+                <td class="border px-4 py-2">${(pdDlb === "あり") ? "<span class='text-red-500 font-bold'>PD/DLBあり</span>" : "PD/DLBなし"}</td>
+            </tr>
+            <tr class="bg-white">
+                <td class="border px-4 py-2"></td>
+                <td class="border px-4 py-2">重症筋無力症</td>
+                <td class="border px-4 py-2">${(myastheniaGravis === "あり") ? "<span class='text-red-500 font-bold'>重症筋無力症あり</span>" : "重症筋無力症なし"}</td>
+            </tr>
+            <tr class="bg-gray-100">
+                <td class="border px-4 py-2"></td>
+                <td class="border px-4 py-2">急性閉塞隅角緑内障</td>
+                <td class="border px-4 py-2">${(glaucoma === "あり") ? "<span class='text-red-500 font-bold'>急性閉塞隅角緑内障あり</span>" : "急性閉塞隅角緑内障なし"}</td>
+            </tr>
+            <tr class="bg-white">
+                <td class="border px-4 py-2">年齢</td>
+                <td class="border px-4 py-2">年齢カテゴリ</td>
+                <td class="border px-4 py-2">${(age >= 65) ? "65歳以上" : "65歳未満"}</td>
+            </tr>
+            <tr class="bg-gray-100">
+                <td class="border px-4 py-2">PS・全身状態</td>
+                <td class="border px-4 py-2">PS・全身状態</td>
+                <td class="border px-4 py-2">${(psStatus === "高い") ? "PSが高い" : "PSが低い"}</td>
+            </tr>
+            <tr class="bg-white">
+                <td class="border px-4 py-2">せん妄タイプ</td>
+                <td class="border px-4 py-2">せん妄のタイプ</td>
+                <td class="border px-4 py-2">${deliriumType}</td>
+            </tr>
+        </tbody>
+    </table>
+    `;
+
+    document.getElementById("currentTreatment").innerHTML = result;
+}
+
+    </script>
+</head>
+<body class="bg-gray-100" onload="checkPassword()">
+    <div class="container mx-auto p-4">
+        <h1 class="text-2xl font-bold mb-6">せん妄自動提案表</h1>
+
+        <div oninput="calculateCurrentTreatment()">
+            <!-- 患者側データセクション -->
+            <div class="bg-white p-4 rounded-lg shadow-md mb-6">
+                <h2 class="text-xl font-semibold mb-4">患者側データ</h2>
+
+                <!-- 基本情報セクション -->
+                <div class="mb-6">
+                    <h3 class="text-lg font-semibold mb-4">基本情報</h3>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="年齢" class="block text-gray-700">年齢</label>
+                            <input type="number" id="年齢" name="年齢" value="50" min="0" max="120" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm">
+                        </div>
+                        <div>
+                            <label for="性別" class="block text-gray-700">性別</label>
+                            <select id="性別" name="性別" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm">
+                                <option value="男性" selected>男性</option>
+                                <option value="女性">女性</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+            <!-- 肝機能セクション -->
+            <div class="mb-6">
+                <h3 class="text-lg font-semibold mb-4">肝機能</h3>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label for="肝性脳症" class="block text-gray-700">肝性脳症</label>
+                        <select id="肝性脳症" name="肝性脳症" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm">
+                            <option value="なし" selected>なし</option>
+                            <option value="あり">あり</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="腹水" class="block text-gray-700">腹水</label>
+                        <select id="腹水" name="腹水" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm">
+                            <option value="なし" selected>なし</option>
+                            <option value="あり">あり</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="総ビリルビン" class="block text-gray-700">総ビリルビン (mg/dL)</label>
+                        <input type="range" id="総ビリルビン" name="総ビリルビン" value="1" min="0" max="5" step="0.1" class="mt-1 block w-full" oninput="updateValue('総ビリルビンValue', this.value)">
+                        <span id="総ビリルビンValue" class="text-gray-700">1</span>
+                    </div>
+                    <div>
+                        <label for="血清アルブミン値" class="block text-gray-700">血清アルブミン値 (g/dL)</label>
+                        <input type="range" id="血清アルブミン値" name="血清アルブミン値" value="5" min="2" max="5" step="0.1" class="mt-1 block w-full" oninput="updateValue('血清アルブミン値Value', this.value)">
+                        <span id="血清アルブミン値Value" class="text-gray-700">5</span>
+                    </div>
+                    <div>
+                        <label for="PT" class="block text-gray-700">PT ％</label>
+                        <input type="range" id="PT" name="PT" value="92" min="0" max="100" step="1" class="mt-1 block w-full" oninput="updateValue('PTValue', this.value)">
+                        <span id="PTValue" class="text-gray-700">92</span>
+                    </div>
+                    <div>
+                        <label for="ChildPugh" class="block text-gray-700">Child-Pugh分類</label>
+                        <input type="text" id="ChildPugh" name="ChildPugh" value="A" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 腎機能セクション -->
+            <div class="mb-6">
+                <h3 class="text-lg font-semibold mb-4">腎機能</h3>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label for="体重" class="block text-gray-700">体重 (kg)</label>
+                        <input type="range" id="体重" name="体重" value="100" min="30" max="150" step="1" class="mt-1 block w-full" oninput="updateValue('体重Value', this.value)">
+                        <span id="体重Value" class="text-gray-700">100</span>
+                    </div>
+                    <div>
+                        <label for="クレアチニン" class="block text-gray-700">クレアチニン値 (mg/dL)</label>
+                        <input type="range" id="クレアチニン" name="クレアチニン" value="1.0" min="0.5" max="5" step="0.1" class="mt-1 block w-full" oninput="updateValue('クレアチニンValue', this.value)">
+                        <span id="クレアチニンValue" class="text-gray-700">1.0</span>
+                    </div>
+                    <div>
+                        <label for="Ccr" class="block text-gray-700">Ccr (mL/min)</label>
+                        <input type="range" id="Ccr" name="Ccr" value="125.0" min="0" max="200" step="1" class="mt-1 block w-full" oninput="updateValue('CcrValue', this.value)">
+                        <span id="CcrValue" class="text-gray-700">125.0</span>
+                    </div>
+                </div>
+            </div>
+
+
+                <!-- 糖尿病セクション -->
+                <div class="mb-6">
+                    <h3 class="text-lg font-semibold mb-4">糖尿病</h3>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="糖尿病既往" class="block text-gray-700">糖尿病・既往</label>
+                            <select id="糖尿病既往" name="糖尿病既往" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm">
+                                <option value="なし" selected>なし</option>
+                                <option value="あり">あり</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="HbA1c" class="block text-gray-700">HbA1c (%)</label>
+                            <input type="range" id="HbA1c" name="HbA1c" value="5" min="4" max="14" step="0.1" class="mt-1 block w-full" oninput="updateValue('HbA1cValue', this.value)">
+                            <span id="HbA1cValue" class="text-gray-700">5</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 心機能セクション -->
+                <div class="mb-6">
+                    <h3 class="text-lg font-semibold mb-4">心機能</h3>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="QT延長" class="block text-gray-700">QTc延長</label>
+                            <select id="QT延長" name="QT延長" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm">
+                                <option value="なし" selected>なし</option>
+                                <option value="あり">あり</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="心不全" class="block text-gray-700">心不全</label>
+                            <select id="心不全" name="心不全" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm">
+                                <option value="なし" selected>なし</option>
+                                <option value="あり">あり</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="PD_Lb" class="block text-gray-700">PD/DLB</label>
+                            <select id="PD_Lb" name="PD_Lb" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm">
+                                <option value="なし" selected>なし</option>
+                                <option value="あり">あり</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="重症筋無力症" class="block text-gray-700">重症筋無力症</label>
+                            <select id="重症筋無力症" name="重症筋無力症" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm">
+                                <option value="なし" selected>なし</option>
+                                <option value="あり">あり</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="急性閉塞隅角緑内障" class="block text-gray-700">急性閉塞隅角緑内障</label>
+                            <select id="急性閉塞隅角緑内障" name="急性閉塞隅角緑内障" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm">
+                                <option value="なし" selected>なし</option>
+                                <option value="あり">あり</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- せん妄タイプセクション -->
+                <div class="mb-6">
+                    <h3 class="text-lg font-semibold mb-4">せん妄タイプ</h3>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="せん妄タイプ" class="block text-gray-700">せん妄のタイプ</label>
+                            <select id="せん妄タイプ" name="せん妄タイプ" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm">
+                                <option value="過活動" selected>過活動</option>
+                                <option value="低活動">低活動</option>
+                                <option value="混合">混合</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="PS全身状態" class="block text-gray-700">PS・全身状態</label>
+                            <select id="PS全身状態" name="PS全身状態" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm">
+                                <option value="高い" selected>高い</option>
+                                <option value="低い">低い</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 現処方セクション -->
+                <div class="bg-white p-4 rounded-lg shadow-md mb-6">
+                    <h3 class="text-lg font-semibold mb-4">現処方</h3>
+                    <div id="currentTreatment" class="bg-gray-200 p-2 rounded-md text-gray-800"></div>
+                </div>
+
+            </div>
+        </div>
+        <div class="bg-white p-4 rounded-lg shadow-md mb-6">
+            <h2 class="text-xl font-semibold mb-4">薬剤選択</h2>
+            
+            <!-- メジャー -->
+            <div class="mb-6">
+                <h3 class="text-lg font-semibold mb-3">メジャー</h3>
+                <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+                    <div class="drug-card bg-white rounded-lg shadow-md overflow-hidden">
+                        <div class="bg-green-500 text-white p-3">
+                            <h4 class="font-bold text-xl">クエチアピン</h4>
+                        </div>
+                        <div class="p-2 bg-green-100">
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold">投与可能量</span>
+                                <span id="quetiapine-dose" class="text-lg font-bold">50mg2X</span>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <table class="w-full text-sm">
+                                <tr class="border-b">
+                                    <th class="font-semibold p-2 text-left w-1/3">禁忌リスト</th>
+                                    <td class="p-2 w-1/4 text-gray-600 font-semibold">禁忌</td>
+                                    <td class="p-2">
+                                        <span id="quetiapine-contraindication-1" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">アドレナリン</span>
+                                        <span id="quetiapine-contraindication-2" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">糖尿病あり</span>
+                                        <span id="quetiapine-contraindication-3" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">HbA1c≧6.5</span>
+                                    </td>
+                                </tr>
+                                <tr class="border-b bg-gray-50">
+                                    <th class="font-semibold p-2 text-left">減量が決まっている薬</th>
+                                    <td class="p-2 text-gray-600 font-semibold">減量推奨(25mg2X〜)</td>
+                                    <td class="p-2">
+                                        <span id="quetiapine-reduction-2" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">イトラコナゾール</span>
+                                        <span id="quetiapine-reduction-3" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">エリスロマイシン</span>
+                                    </td>
+                                </tr>
+                                <tr class="border-b">
+                                    <th class="font-semibold p-2 text-left">減量推奨される薬</th>
+                                    <td class="p-2 text-gray-600 font-semibold">減量推奨</td>
+                                    <td class="p-2">
+                                        <span id="quetiapine-recommend-reduction" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800">CYP3A4の薬</span>
+                                    </td>
+                                </tr>
+                                <tr class="border-b bg-gray-50">
+                                    <th class="font-semibold p-2 text-left">減量推奨（身体面）</th>
+                                    <td class="p-2 text-gray-600 font-semibold">減量推奨(25mg2X〜)</td>
+                                    <td class="p-2">
+                                        <span id="quetiapine-physical-reduction-2" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">75歳以上</span>
+                                        <span id="quetiapine-physical-reduction-3" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">PSが低い</span>
+                                    </td>
+                                </tr>
+                                <tr class="border-b">
+                                    <th class="font-semibold p-2 text-left">QT延長・非推奨・減量</th>
+                                    <td class="p-2 text-gray-600 font-semibold">QT延長あり・減量</td>
+                                    <td class="p-2">
+                                        <span id="quetiapine-qt-2" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800">QT延長あり</span>
+                                    </td>
+                                </tr>
+                                <tr class="border-b bg-gray-50">
+                                    <th class="font-semibold p-2 text-left">無効・効果減</th>
+                                    <td class="p-2 text-gray-600 font-semibold">効果減（50mg2X）</td>
+                                    <td class="p-2">
+                                        <span id="quetiapine-ineffective-2" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">フェニトイン</span>
+                                        <span id="quetiapine-ineffective-3" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">カルバマゼピン</span>
+                                        <span id="quetiapine-ineffective-4" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">リファンピシン</span>
+                                    </td>
+                                </tr>
+                                <tr class="border-b">
+                                    <th class="font-semibold p-2 text-left text-green-600">最大投与可能量</th>
+                                    <td class="p-2 text-green-600 font-semibold" colspan="2">50mg2X</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- リスペリドン -->
+                    <div class="drug-card bg-white rounded-lg shadow-md overflow-hidden">
+                        <div class="bg-gray-500 text-white p-3">
+                            <h4 class="font-bold text-xl">リスペリドン</h4>
+                        </div>
+                        <div class="p-2 bg-gray-100">
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold">投与可能量</span>
+                                <span id="risperidone-dose" class="text-lg font-bold">2mg2X</span>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <table class="w-full text-sm">
+                                <tr class="border-b">
+                                    <th class="font-semibold p-2 text-left w-1/3">禁忌リスト</th>
+                                    <td class="p-2 w-1/4 text-gray-600 font-semibold">禁忌</td>
+                                    <td class="p-2">
+                                        <span id="risperidone-contraindication-1" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">アドレナリン</span>
+                                        <span id="risperidone-contraindication-2" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">CCr<44</span>
+                                        <span id="risperidone-contraindication-3" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">透析</span>
+                                    </td>
+                                </tr>
+                                <tr class="border-b bg-gray-50">
+                                    <th class="font-semibold p-2 text-left">減量が決まっている薬</th>
+                                    <td class="p-2 text-gray-600 font-semibold">減量推奨(0.5mg2X〜)</td>
+                                    <td class="p-2">
+                                        <span id="risperidone-reduction-1" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">イトラコナゾール</span>
+                                        <span id="risperidone-reduction-2" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">パロキセチン</span>
+                                    </td>
+                                </tr>
+                                <tr class="border-b">
+                                    <th class="font-semibold p-2 text-left">減量推奨される薬</th>
+                                    <td class="p-2 text-gray-600 font-semibold" colspan="2"></td>
+                                </tr>
+                                <tr class="border-b bg-gray-50">
+                                    <th class="font-semibold p-2 text-left">減量推奨（身体面）</th>
+                                    <td class="p-2 text-gray-600 font-semibold">減量推奨(0.5mg2X〜)</td>
+                                    <td class="p-2">
+                                        <span id="risperidone-physical-reduction-1" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">75歳以上</span>
+                                        <span id="risperidone-physical-reduction-2" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">PSが低い</span>
+                                    </td>
+                                </tr>
+                                <tr class="border-b">
+                                    <th class="font-semibold p-2 text-left">QT延長・非推奨・減量</th>
+                                    <td class="p-2 text-gray-600 font-semibold">QT延長あり・非推奨</td>
+                                    <td class="p-2">
+                                        <span id="risperidone-qt" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800">QT延長あり</span>
+                                    </td>
+                                </tr>
+                                <tr class="border-b bg-gray-50">
+                                    <th class="font-semibold p-2 text-left">無効・効果減</th>
+                                    <td class="p-2 text-gray-600 font-semibold">効果減（2mg2X）</td>
+                                    <td class="p-2">
+                                        <span id="risperidone-ineffective-1" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">フェニトイン</span>
+                                        <span id="risperidone-ineffective-2" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">カルバマゼピン</span>
+                                        <span id="risperidone-ineffective-3" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">リファンピシン</span>
+                                        <span id="risperidone-ineffective-4" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">フェノバルビタール</span>
+                                    </td>
+                                </tr>
+                                <tr class="border-b">
+                                    <th class="font-semibold p-2 text-left text-green-600">最大投与可能量</th>
+                                    <td class="p-2 text-green-600 font-semibold" colspan="2">2mg2X</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- ルーラン -->
+                    <div class="drug-card bg-white rounded-lg shadow-md overflow-hidden">
+                        <div class="bg-gray-500 text-white p-3">
+                            <h4 class="font-bold text-xl">ルーラン</h4>
+                        </div>
+                        <div class="p-2 bg-gray-100">
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold">投与可能量</span>
+                                <span id="rulan-dose" class="text-lg font-bold">8mg2X</span>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <table class="w-full text-sm">
+                                <tr class="border-b">
+                                    <th class="font-semibold p-2 text-left w-1/3">禁忌リスト</th>
+                                    <td class="p-2 w-1/4 text-gray-600 font-semibold">禁忌</td>
+                                    <td class="p-2">
+                                        <span id="rulan-contraindication-1" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">アドレナリン</span>
+                                    </td>
+                                </tr>
+                                <tr class="border-b bg-gray-50">
+                                    <th class="font-semibold p-2 text-left">減量が決まっている薬</th>
+                                    <td class="p-2 text-gray-600 font-semibold">減量推奨(4mg2X〜)</td>
+                                    <td class="p-2">
+                                        <span id="rulan-reduction-1" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">マクロライド</span>
+                                        <span id="rulan-reduction-2" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">ケトコナゾール</span>
+                                    </td>
+                                </tr>
+                                <tr class="border-b">
+                                    <th class="font-semibold p-2 text-left">減量推奨される薬</th>
+                                    <td class="p-2 text-gray-600 font-semibold" colspan="2"></td>
+                                </tr>
+                                <tr class="border-b bg-gray-50">
+                                    <th class="font-semibold p-2 text-left">減量推奨（身体面）</th>
+                                    <td class="p-2 text-gray-600 font-semibold">減量推奨(4mg2X〜)</td>
+                                    <td class="p-2"></td>
+                                </tr>
+                                <tr class="border-b">
+                                    <th class="font-semibold p-2 text-left">QT延長・非推奨・減量</th>
+                                    <td class="p-2 text-gray-600 font-semibold">QT延長あり・慎重投与</td>
+                                    <td class="p-2">
+                                        <span id="rulan-qt" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800">QT延長あり</span>
+                                    </td>
+                                </tr>
+                                <tr class="border-b bg-gray-50">
+                                    <th class="font-semibold p-2 text-left">無効・効果減</th>
+                                    <td class="p-2 text-gray-600 font-semibold" colspan="2"></td>
+                                </tr>
+                                <tr class="border-b">
+                                    <th class="font-semibold p-2 text-left text-green-600">最大投与可能量</th>
+                                    <td class="p-2 text-green-600 font-semibold" colspan="2">8mg2X</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- 点滴 -->
+            <div class="mb-6">
+                <h3 class="text-lg font-semibold mb-3">点滴</h3>
+                <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+                    <!-- ハロペリドール -->
+                    <div class="drug-card bg-white rounded-lg shadow-md overflow-hidden">
+                        <div class="bg-gray-500 text-white p-3">
+                            <h4 class="font-bold text-xl">ハロペリドール</h4>
+                        </div>
+                        <div class="p-2 bg-gray-100">
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold">投与可能量</span>
+                                <span id="haloperidol-dose" class="text-lg font-bold text-gray-600">1A</span>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <table class="w-full text-sm">
+                                <tr class="border-b">
+                                    <th class="font-semibold p-2 text-left w-1/3">禁忌リスト</th>
+                                    <td class="p-2 w-1/4 text-gray-600 font-semibold">禁忌</td>
+                                    <td class="p-2">
+                                        <span id="haloperidol-contraindication-1" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">アドレナリン</span>
+                                        <span id="haloperidol-contraindication-2" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">重症心不全あり</span>
+                                        <span id="haloperidol-contraindication-3" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">PD/DLBあり</span>
+                                    </td>
+                                </tr>
+                                <tr class="border-b bg-gray-50">
+                                    <th class="font-semibold p-2 text-left">減量が決まっている薬</th>
+                                    <td class="p-2 text-gray-600 font-semibold">減量推奨(0.5A)</td>
+                                    <td class="p-2">
+                                        <span id="haloperidol-reduction-1" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">イトラコナゾール</span>
+                                        <span id="haloperidol-reduction-2" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">キニジン</span>
+                                        <span id="haloperidol-reduction-3" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">プロメタジン</span>
+                                    </td>
+                                </tr>
+                                <tr class="border-b">
+                                    <th class="font-semibold p-2 text-left">減量推奨される薬</th>
+                                    <td class="p-2 text-gray-600 font-semibold" colspan="2">
+                                        <span id="haloperidol-recommend-reduction" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800">クロルプロマジン</span>
+                                    </td>
+                                </tr>
+                                <tr class="border-b bg-gray-50">
+                                    <th class="font-semibold p-2 text-left">減量推奨（身体面）</th>
+                                    <td class="p-2 text-gray-600 font-semibold">減量推奨(0.5A)</td>
+                                    <td class="p-2">
+                                        <span id="haloperidol-physical-reduction-1" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">75歳以上</span>
+                                        <span id="haloperidol-physical-reduction-2" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">PSが低い</span>
+                                    </td>
+                                </tr>
+                                <tr class="border-b">
+                                    <th class="font-semibold p-2 text-left">QT延長・非推奨・減量</th>
+                                    <td class="p-2 text-gray-600 font-semibold">QT延長あり・非推奨(~0.5A)</td>
+                                    <td class="p-2">
+                                        <span id="haloperidol-qt" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800">QT延長あり</span>
+                                    </td>
+                                </tr>
+                                <tr class="border-b bg-gray-50">
+                                    <th class="font-semibold p-2 text-left">無効・効果減</th>
+                                    <td class="p-2 text-gray-600 font-semibold">効果減（1A）</td>
+                                    <td class="p-2">
+                                        <span id="haloperidol-ineffective-1" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">カルバマゼピン</span>
+                                        <span id="haloperidol-ineffective-2" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">リファンピシン</span>
+                                    </td>
+                                </tr>
+                                <tr class="border-b">
+                                    <th class="font-semibold p-2 text-left text-blue-600">最大投与可能量</th>
+                                    <td class="p-2 text-blue-600 font-semibold" colspan="2">1A</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- アタラックスP -->
+                    <div class="drug-card bg-white rounded-lg shadow-md overflow-hidden">
+                        <div class="bg-gray-500 text-white p-3">
+                            <h4 class="font-bold text-xl">アタラックスP</h4>
+                        </div>
+                        <div class="p-2 bg-gray-100">
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold">投与可能量</span>
+                                <span id="atarax-dose" class="text-lg font-bold text-gray-600">1A</span>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <table class="w-full text-sm">
+                                <tr class="border-b">
+                                    <th class="font-semibold p-2 text-left w-1/3">禁忌リスト</th>
+                                    <td class="p-2 w-1/4 text-gray-600 font-semibold">禁忌</td>
+                                    <td class="p-2">
+                                        <span id="atarax-contraindication-1" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">妊婦</span>
+                                        <span id="atarax-contraindication-2" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">ポルフィリン症</span>
+                                    </td>
+                                </tr>
+                                <tr class="border-b bg-gray-50">
+                                    <th class="font-semibold p-2 text-left">減量が決まっている薬</th>
+                                    <td class="p-2 text-gray-600 font-semibold">減量推奨(0.5A)</td>
+                                    <td class="p-2"></td>
+                                </tr>
+                                <tr class="border-b">
+                                    <th class="font-semibold p-2 text-left">減量推奨される薬</th>
+                                    <td class="p-2 text-gray-600 font-semibold" colspan="2">
+                                        <span id="atarax-recommend-reduction" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800">シメチジン</span>
+                                    </td>
+                                </tr>
+                                <tr class="border-b bg-gray-50">
+                                    <th class="font-semibold p-2 text-left">減量推奨（身体面）</th>
+                                    <td class="p-2 text-gray-600 font-semibold">減量推奨(0.5A)</td>
+                                    <td class="p-2">
+                                        <span id="atarax-physical-reduction" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">75歳以上</span>
+                                    </td>
+                                </tr>
+                                <tr class="border-b">
+                                    <th class="font-semibold p-2 text-left">QT延長・非推奨・減量</th>
+                                    <td class="p-2 text-gray-600 font-semibold">QT延長あり、慎重投与</td>
+                                    <td class="p-2">
+                                        <span id="atarax-qt" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800">QT延長あり</span>
+                                    </td>
+                                </tr>
+                                <tr class="border-b bg-gray-50">
+                                    <th class="font-semibold p-2 text-left">無効・効果減</th>
+                                    <td class="p-2 text-gray-600 font-semibold" colspan="2"></td>
+                                </tr>
+                                <tr class="border-b">
+                                    <th class="font-semibold p-2 text-left text-blue-600">最大投与可能量</th>
+                                    <td class="p-2 text-blue-600 font-semibold" colspan="2">1A</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- オレキシン系 -->
+            <div class="mb-6">
+                <h3 class="text-lg font-semibold mb-3">オレキシン系</h3>
+                <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+                    <!-- デエビゴ -->
+                    <div class="drug-card bg-white rounded-lg shadow-md overflow-hidden">
+                        <div class="bg-purple-500 text-white p-3">
+                            <h4 class="font-bold text-xl">デエビゴ</h4>
+                        </div>
+                        <div class="p-2 bg-purple-100">
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold">投与可能量</span>
+                                <span id="dayvigo-dose" class="text-lg font-bold text-red-600">5〜10mg</span>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <table class="w-full text-sm">
+                                <tr class="border-b">
+                                    <th class="font-semibold p-2 text-left w-1/3">禁忌リスト</th>
+                                    <td class="p-2 w-1/4 text-gray-600 font-semibold">禁忌</td>
+                                    <td class="p-2">
+                                        <span id="dayvigo-contraindication-1" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">Child-Pugh C</span>
+                                    </td>
+                                </tr>
+                                <tr class="border-b bg-gray-50">
+                                    <th class="font-semibold p-2 text-left">減量が決まっている薬</th>
+                                    <td class="p-2 text-gray-600 font-semibold">2.5mgまでなら可</td>
+                                    <td class="p-2">
+                                        <span id="dayvigo-reduction-1" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">イトラコナゾール</span>
+                                        <span id="dayvigo-reduction-2" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">クラリスロマイシン</span>
+                                        <span id="dayvigo-reduction-3" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">エリスロマイシン</span>
+                                        <span id="dayvigo-reduction-4" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">フルコナゾール</span>
+                                        <span id="dayvigo-reduction-5" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">ベラパミル</span>
+                                    </td>
+                                </tr>
+                                <tr class="border-b">
+                                    <th class="font-semibold p-2 text-left">減量推奨される薬</th>
+                                    <td class="p-2 text-gray-600 font-semibold" colspan="2">
+                                        <span id="dayvigo-recommend-reduction" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800">CYP3A4の薬</span>
+                                    </td>
+                                </tr>
+                                <tr class="border-b bg-gray-50">
+                                    <th class="font-semibold p-2 text-left">減量推奨（身体面）</th>
+                                    <td class="p-2 text-gray-600 font-semibold">5mgまでなら可</td>
+                                    <td class="p-2">
+                                        <span id="dayvigo-physical-reduction" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">Child-Pugh B</span>
+                                    </td>
+                                </tr>
+                                <tr class="border-b">
+                                    <th class="font-semibold p-2 text-left">QT延長・非推奨・減量</th>
+                                    <td class="p-2 text-gray-600 font-semibold" colspan="2"></td>
+                                </tr>
+                                <tr class="border-b bg-gray-50">
+                                    <th class="font-semibold p-2 text-left">無効・効果減</th>
+                                    <td class="p-2 text-gray-600 font-semibold">非推奨（9割効果減）</td>
+                                    <td class="p-2">
+                                        <span id="dayvigo-ineffective-1" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">リファンピシン</span>
+                                        <span id="dayvigo-ineffective-2" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">フェニトイン</span>
+                                    </td>
+                                </tr>
+                                <tr class="border-b">
+                                    <th class="font-semibold p-2 text-left text-purple-600">最大投与可能量</th>
+                                    <td class="p-2 text-purple-600 font-semibold" colspan="2">5〜10mg</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- ベルソムラ -->
+                    <div class="drug-card bg-white rounded-lg shadow-md overflow-hidden">
+                        <div class="bg-gray-500 text-white p-3">
+                            <h4 class="font-bold text-xl">ベルソムラ</h4>
+                        </div>
+                        <div class="p-2 bg-gray-100">
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold">投与可能量</span>
+                                <span id="belsomra-dose" class="text-lg font-bold text-red-600">20mg</span>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <table class="w-full text-sm">
+                                <tr class="border-b">
+                                    <th class="font-semibold p-2 text-left w-1/3">禁忌リスト</th>
+                                    <td class="p-2 w-1/4 text-gray-600 font-semibold">禁忌</td>
+                                    <td class="p-2">
+                                        <span id="belsomra-contraindication-1" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">イトラコナゾール</span>
+                                        <span id="belsomra-contraindication-2" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">イトリゾール</span>
+                                        <span id="belsomra-contraindication-3" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">ボサコナゾール</span>
+                                        <span id="belsomra-contraindication-4" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">ノクサフィル</span>
+                                        <span id="belsomra-contraindication-5" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">ポリコナゾール</span>
+                                        <span id="belsomra-contraindication-6" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">ブイフェンド</span>
+                                        <span id="belsomra-contraindication-7" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">クラリスロマイシン</span>
+                                        <span id="belsomra-contraindication-8" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">クラリシッド</span>
+                                        <span id="belsomra-contraindication-9" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">リトナビル</span>
+                                        <span id="belsomra-contraindication-10" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">ノービア</span>
+                                        <span id="belsomra-contraindication-11" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">ネルフィナビル</span>
+                                        <span id="belsomra-contraindication-12" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">ビラセプト</span>
+                                    </td>
+                                </tr>
+                                <tr class="border-b bg-gray-50">
+                                    <th class="font-semibold p-2 text-left">減量が決まっている薬</th>
+                                    <td class="p-2 text-gray-600 font-semibold">10mgまでなら可</td>
+                                    <td class="p-2">
+                                        <span id="belsomra-reduction-1" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">ジルチアゼム</span>
+                                        <span id="belsomra-reduction-2" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">ベラパミル</span>
+                                        <span id="belsomra-reduction-3" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">フルコナゾール</span>
+                                    </td>
+                                </tr>
+                                <tr class="border-b">
+                                    <th class="font-semibold p-2 text-left">減量推奨される薬</th>
+                                    <td class="p-2 text-gray-600 font-semibold" colspan="2"></td>
+                                </tr>
+                                <tr class="border-b bg-gray-50">
+                                    <th class="font-semibold p-2 text-left">減量推奨（身体面）</th>
+                                    <td class="p-2 text-gray-600 font-semibold">15mgまでなら可</td>
+                                    <td class="p-2">
+                                        <span id="belsomra-physical-reduction" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">65歳以上</span>
+                                    </td>
+                                </tr>
+                                <tr class="border-b">
+                                    <th class="font-semibold p-2 text-left">QT延長・非推奨・減量</th>
+                                    <td class="p-2 text-gray-600 font-semibold" colspan="2"></td>
+                                </tr>
+                                <tr class="border-b bg-gray-50">
+                                    <th class="font-semibold p-2 text-left">無効・効果減</th>
+                                    <td class="p-2 text-gray-600 font-semibold">非推奨（8割効果減）</td>
+                                    <td class="p-2">
+                                        <span id="belsomra-ineffective-1" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">リファンピシン</span>
+                                        <span id="belsomra-ineffective-2" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">カルバマゼピン</span>
+                                        <span id="belsomra-ineffective-3" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">フェニトイン</span>
+                                    </td>
+                                </tr>
+                                <tr class="border-b">
+                                    <th class="font-semibold p-2 text-left text-purple-600">最大投与可能量</th>
+                                    <td class="p-2 text-purple-600 font-semibold" colspan="2">20mg</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 抗うつ薬系 -->
+            <div class="mb-6">
+                <h3 class="text-lg font-semibold mb-3">抗うつ薬系</h3>
+                <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+                    <!-- テトラミド -->
+                    <div class="drug-card bg-white rounded-lg shadow-md overflow-hidden">
+                        <div class="bg-yellow-500 text-white p-3">
+                            <h4 class="font-bold text-xl">テトラミド</h4>
+                        </div>
+                        <div class="p-2 bg-yellow-100">
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold">投与可能量</span>
+                                <span id="tetramide-dose" class="text-lg font-bold text-red-600">10-30mg</span>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <table class="w-full text-sm">
+                                <tr class="border-b">
+                                    <th class="font-semibold p-2 text-left w-1/3">禁忌リスト</th>
+                                    <td class="p-2 w-1/4 text-gray-600 font-semibold">禁忌</td>
+                                    <td class="p-2">
+                                        <span id="tetramide-contraindication-1" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">セレギリン</span>
+                                        <span id="tetramide-contraindication-2" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">ラサギリンメシル</span>
+                                        <span id="tetramide-contraindication-3" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">サフィナミドメシル</span>
+                                    </td>
+                                </tr>
+                                <tr class="border-b bg-gray-50">
+                                    <th class="font-semibold p-2 text-left">減量が決まっている薬</th>
+                                    <td class="p-2 text-gray-600 font-semibold" colspan="2"></td>
+                                </tr>
+                                <tr class="border-b">
+                                    <th class="font-semibold p-2 text-left">減量推奨される薬</th>
+                                    <td class="p-2 text-gray-600 font-semibold" colspan="2"></td>
+                                </tr>
+                                <tr class="border-b bg-gray-50">
+                                    <th class="font-semibold p-2 text-left">減量推奨（身体面）</th>
+                                    <td class="p-2 text-gray-600 font-semibold" colspan="2"></td>
+                                </tr>
+                                <tr class="border-b">
+                                    <th class="font-semibold p-2 text-left">QT延長・非推奨・減量</th>
+                                    <td class="p-2 text-gray-600 font-semibold">QT延長あり・注意</td>
+                                    <td class="p-2">
+                                        <span id="tetramide-qt" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800">リネゾリド</span>
+                                    </td>
+                                </tr>
+                                <tr class="border-b bg-gray-50">
+                                    <th class="font-semibold p-2 text-left">無効・効果減</th>
+                                    <td class="p-2 text-gray-600 font-semibold">効果減（効きにくい：10-30mg）</td>
+                                    <td class="p-2">
+                                        <span id="tetramide-ineffective-1" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">カルバマゼピン</span>
+                                        <span id="tetramide-ineffective-2" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">フェニトイン</span>
+                                    </td>
+                                </tr>
+                                <tr class="border-b">
+                                    <th class="font-semibold p-2 text-left text-yellow-600">最大投与可能量</th>
+                                    <td class="p-2 text-yellow-600 font-semibold" colspan="2">10-30mg</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- トラゾドン -->
+                    <div class="drug-card bg-white rounded-lg shadow-md overflow-hidden">
+                        <div class="bg-gray-500 text-white p-3">
+                            <h4 class="font-bold text-xl">トラゾドン</h4>
+                        </div>
+                        <div class="p-2 bg-gray-100">
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold">投与可能量</span>
+                                <span id="trazodone-dose" class="text-lg font-bold text-red-600">25-75mg</span>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <table class="w-full text-sm">
+                                <tr class="border-b">
+                                    <th class="font-semibold p-2 text-left w-1/3">禁忌リスト</th>
+                                    <td class="p-2 w-1/4 text-gray-600 font-semibold">禁忌</td>
+                                    <td class="p-2">
+                                        <span id="trazodone-contraindication-1" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">サキナビルメシル酸塩製剤中止</span>
+                                    </td>
+                                </tr>
+                                <tr class="border-b bg-gray-50">
+                                    <th class="font-semibold p-2 text-left">減量が決まっている薬</th>
+                                    <td class="p-2 text-gray-600 font-semibold">減量推奨(25mg2X〜)</td>
+                                    <td class="p-2">
+                                        <span id="trazodone-reduction-1" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">リトナビル</span>
+                                        <span id="trazodone-reduction-2" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">ニルマトレルビル</span>
+                                        <span id="trazodone-reduction-3" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">インジナビル</span>
+                                    </td>
+                                </tr>
+                                <tr class="border-b">
+                                    <th class="font-semibold p-2 text-left">減量推奨される薬</th>
+                                    <td class="p-2 text-gray-600 font-semibold" colspan="2"></td>
+                                </tr>
+                                <tr class="border-b bg-gray-50">
+                                    <th class="font-semibold p-2 text-left">減量推奨（身体面）</th>
+                                    <td class="p-2 text-gray-600 font-semibold">非推奨（QT延長）</td>
+                                    <td class="p-2">
+                                        <span id="trazodone-physical-reduction" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">QT延長あり</span>
+                                    </td>
+                                </tr>
+                                <tr class="border-b">
+                                    <th class="font-semibold p-2 text-left">QT延長・非推奨・減量</th>
+                                    <td class="p-2 text-gray-600 font-semibold">併用要注意があり要確認</td>
+                                    <td class="p-2">
+                                        <span id="trazodone-qt-1" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">降圧薬</span>
+                                        <span id="trazodone-qt-2" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">モノアミン酸化酵素阻害剤</span>
+                                        <span id="trazodone-qt-3" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">ジゴキシン等</span>
+                                        <span id="trazodone-qt-4" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">フェニトイン</span>
+                                        <span id="trazodone-qt-5" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">ワルファリン（PT延長）</span>
+                                    </td>
+                                </tr>
+                                <tr class="border-b bg-gray-50">
+                                    <th class="font-semibold p-2 text-left">無効・効果減</th>
+                                    <td class="p-2 text-gray-600 font-semibold" colspan="2"></td>
+                                </tr>
+                                <tr class="border-b">
+                                    <th class="font-semibold p-2 text-left text-yellow-600">最大投与可能量</th>
+                                    <td class="p-2 text-yellow-600 font-semibold" colspan="2">25-75mg</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- その他 -->
+            <div class="mb-6">
+                <h3 class="text-lg font-semibold mb-3">その他</h3>
+                <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+                    <!-- ルネスタ -->
+                    <div class="drug-card bg-white rounded-lg shadow-md overflow-hidden">
+                        <div class="bg-indigo-500 text-white p-3">
+                            <h4 class="font-bold text-xl">ルネスタ</h4>
+                        </div>
+                        <div class="p-2 bg-indigo-100">
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold">投与可能量</span>
+                                <span id="lunesta-dose" class="text-lg font-bold text-red-600">1〜3mg</span>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <table class="w-full text-sm">
+                                <tr class="border-b">
+                                    <th class="font-semibold p-2 text-left w-1/3">禁忌リスト</th>
+                                    <td class="p-2 w-1/4 text-gray-600 font-semibold">禁忌</td>
+                                    <td class="p-2">
+                                        <span id="lunesta-contraindication-1" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">重症筋無力症あり</span>
+                                        <span id="lunesta-contraindication-2" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">急性閉塞隅角緑内障あり</span>
+                                    </td>
+                                </tr>
+                                <tr class="border-b bg-gray-50">
+                                    <th class="font-semibold p-2 text-left">減量が決まっている薬</th>
+                                    <td class="p-2 text-gray-600 font-semibold">効きすぎ注意（2mgまで）</td>
+                                    <td class="p-2"></td>
+                                </tr>
+                                <tr class="border-b">
+                                    <th class="font-semibold p-2 text-left">減量推奨される薬</th>
+                                    <td class="p-2 text-gray-600 font-semibold" colspan="2">
+                                        <span id="lunesta-recommend-reduction" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800">イトラコナゾールなど</span>
+                                    </td>
+                                </tr>
+                                <tr class="border-b bg-gray-50">
+                                    <th class="font-semibold p-2 text-left">減量推奨（身体面）</th>
+                                    <td class="p-2 text-gray-600 font-semibold">減量(2mgまで)</td>
+                                    <td class="p-2">
+                                        <span id="lunesta-physical-reduction-1" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">Child-Pugh C</span>
+                                        <span id="lunesta-physical-reduction-2" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">CCr<44</span>
+                                        <span id="lunesta-physical-reduction-3" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">65歳以上</span>
+                                    </td>
+                                </tr>
+                                <tr class="border-b">
+                                    <th class="font-semibold p-2 text-left">QT延長・非推奨・減量</th>
+                                    <td class="p-2 text-gray-600 font-semibold" colspan="2"></td>
+                                </tr>
+                                <tr class="border-b bg-gray-50">
+                                    <th class="font-semibold p-2 text-left">無効・効果減</th>
+                                    <td class="p-2 text-gray-600 font-semibold">投与可能(効きにくい:1〜3mg)</td>
+                                    <td class="p-2">
+                                        <span id="lunesta-ineffective" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">リファンピシンなど</span>
+                                    </td>
+                                </tr>
+                                <tr class="border-b">
+                                    <th class="font-semibold p-2 text-left text-indigo-600">最大投与可能量</th>
+                                    <td class="p-2 text-indigo-600 font-semibold" colspan="2">1〜3mg</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- ラメルテオン -->
+                    <div class="drug-card bg-white rounded-lg shadow-md overflow-hidden">
+                        <div class="bg-gray-500 text-white p-3">
+                            <h4 class="font-bold text-xl">ラメルテオン</h4>
+                        </div>
+                        <div class="p-2 bg-gray-100">
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold">投与可能量</span>
+                                <span id="ramelteon-dose" class="text-lg font-bold text-red-600">8mg</span>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <table class="w-full text-sm">
+                                <tr class="border-b">
+                                    <th class="font-semibold p-2 text-left w-1/3">禁忌リスト</th>
+                                    <td class="p-2 w-1/4 text-gray-600 font-semibold">禁忌</td>
+                                    <td class="p-2">
+                                        <span id="ramelteon-contraindication-1" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">Child-Pugh C</span>
+                                        <span id="ramelteon-contraindication-2" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">フルボキサミン</span>
+                                    </td>
+                                </tr>
+                                <tr class="border-b bg-gray-50">
+                                    <th class="font-semibold p-2 text-left">減量が決まっている薬</th>
+                                    <td class="p-2 text-gray-600 font-semibold">効きすぎ注意</td>
+                                    <td class="p-2"></td>
+                                </tr>
+                                <tr class="border-b">
+                                    <th class="font-semibold p-2 text-left">減量推奨される薬</th>
+                                    <td class="p-2 text-gray-600 font-semibold" colspan="2">
+                                        <span id="ramelteon-recommend-reduction-1" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">キノロン系あり</span>
+                                        <span id="ramelteon-recommend-reduction-2" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">フルコナゾール</span>
+                                        <span id="ramelteon-recommend-reduction-3" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">マクロライド系</span>
+                                    </td>
+                                </tr>
+                                <tr class="border-b bg-gray-50">
+                                    <th class="font-semibold p-2 text-left">減量推奨（身体面）</th>
+                                    <td class="p-2 text-gray-600 font-semibold" colspan="2"></td>
+                                </tr>
+                                <tr class="border-b">
+                                    <th class="font-semibold p-2 text-left">QT延長・非推奨・減量</th>
+                                    <td class="p-2 text-gray-600 font-semibold" colspan="2"></td>
+                                </tr>
+                                <tr class="border-b bg-gray-50">
+                                    <th class="font-semibold p-2 text-left">無効・効果減</th>
+                                    <td class="p-2 text-gray-600 font-semibold">非推奨（8割効果減）</td>
+                                    <td class="p-2">
+                                        <span id="ramelteon-ineffective" class="inline-block bg-gray-200 rounded px-2 py-1 text-gray-800 mr-1 mb-1">リファンピシン（8割減）</span>
+                                    </td>
+                                </tr>
+                                <tr class="border-b">
+                                    <th class="font-semibold p-2 text-left text-indigo-600">最大投与可能量</th>
+                                    <td class="p-2 text-indigo-600 font-semibold" colspan="2">8mg</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
